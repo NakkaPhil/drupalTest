@@ -1,0 +1,7 @@
+custom_directory.listing:
+  path: '/custom-listing'
+  defaults:
+    _controller: '\Drupal\custom_directory\Controller\CustomListing::view'
+    _title: 'Custom Listing'
+  requirements:
+    _permission: 'access content'

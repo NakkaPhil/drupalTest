@@ -1,0 +1,9 @@
+<?php
+
+function custom_directory_theme($existing, $type, $theme, $path){
+  return [
+    'custom-listing' => [
+      'variables' => ['longDef' => NULL]
+    ]
+  ];
+}

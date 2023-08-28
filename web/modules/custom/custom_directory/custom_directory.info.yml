@@ -1,0 +1,7 @@
+name: Custom Directory
+description: This is a costume module
+
+package: CustomModules
+
+type: module
+core_version_requirement:  ^8.0.0 || ^9.0.0 || ^10.0

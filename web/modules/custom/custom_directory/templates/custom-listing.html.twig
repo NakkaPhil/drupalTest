@@ -1,0 +1,157 @@
+<style>
+     .glossary-tip{
+        animation: all ease .2s;
+    }
+
+    .glossary-tip:hover{
+        cursor: pointer;
+        margin: 1rem;
+        padding: 1rem;
+        background: green;
+        color: white;
+        border-radius: 4px;
+    }
+
+    .popupDiv{
+        display: flex;
+        position: absolute;
+        background-color: green;
+        padding: 1rem;
+        max-width: 200px;
+        color: black;
+        opacity: 1;
+        border-radius: 5px;
+        right: 50px;
+    }
+
+    .op0{ display: none; }
+</style>
+
+<div id="parrafo" class="glossary-item">
+   Una estrella de neutrones es un tipo de remanente estelar resultante del colapso gravitacional de una estrella supergigante masiva después de agotar el combustible en su núcleo y explotar como una supernova tipo II, tipo Ib o tipo Ic. Como su nombre indica, estas estrellas están compuestas principalmente de neutrones, más otro tipo de partículas tanto en su corteza sólida de hierro, como en su interior, que puede contener tanto protones y electrones, como piones y kaones. Las estrellas de neutrones son muy calientes y se apoyan en contra de un mayor colapso mediante presión de degeneración cuántica, debido al fenómeno descrito por el principio de exclusión de Pauli. Este principio establece que dos neutrones (o cualquier otra partícula fermiónica) no pueden ocupar el mismo espacio y estado cuántico simultáneamente.
+</div>
+
+<div class="glossaryList" id="glossaryList">
+    <h2>Añadir un término al glosario</h2>
+    <div>
+        <input 
+               id="termTitle"
+               type="text" 
+               placeholder="Nombre del término..." />
+      
+        <input 
+               id="termDefinition"
+               type="text" 
+               placeholder="Definición" />
+    </div>
+    <h4>Glosario</h4>
+    <ul id="glossaryWords">
+    
+    </ul>
+
+    <button id="addToGlossaryBtn">Añadir</button>
+</div>
+
+
+<script>
+//Add New Term button
+
+const saveTermBtn = document.querySelector('#addToGlossaryBtn')
+saveTermBtn.addEventListener("click", ()=> saveNewTerm())
+
+//Pop up
+const popupDiv = document.createElement('DIV')
+popupDiv.classList.add('popupDiv')
+
+//Initial "database"
+let glossary = {  
+     "colapso gravitacional": "El colapso gravitatorio es el desmoronamiento hacia adentro de un cuerpo estelar debido al efecto de su propia gravedad hasta formar un agujero negro",
+     protones: "En física, el protón (del griego πρῶτον, prōton primero) es una partícula subatómica con una carga eléctrica elemental positiva",
+     supernova: "Una supernova (del latín super 'por encima' y nova, 'nueva') es una explosión estelar que puede manifestarse de forma muy notable en el espacio, incluso a simple vista"
+ }
+
+
+readTheDoc();
+ 
+function readTheDoc(){
+    //Taking the text
+    let text = ""
+    text = document.getElementById('parrafo').innerHTML
+    
+    //Looking for glossary words in text and highlighting them
+    for(let i = 0; i <= Object.keys(glossary).length; i = i+1){
+
+        text = text.replace(Object.keys(glossary)[i], `<span id='glossary-tip-${i}'> <b>${Object.keys(glossary)[i]}</b></span>`)
+    }
+
+    //Formatting definitions found in page
+    document.getElementById('parrafo').innerHTML = text
+
+    loadDefinitions();
+}
+
+function loadDefinitions(){
+    let glossary_items = []
+    //Catching glossary words to charge the definition function
+
+    for(let i = 0; i<= Object.keys(glossary).length; i = i+1){
+
+        glossary_items[i] = document.getElementById(`glossary-tip-${i}`)
+
+    }
+
+    glossary_items.forEach((item, index)=>{
+
+        item.addEventListener('mouseover',()=>{
+            popupDiv.classList.toggle('op0')
+            
+            //Load the definition of the word, looking for the value of the key in our "DB"
+            popupDiv.innerHTML = `<p>${Object.values(glossary)[index]}</p>`
+          
+            item.appendChild(popupDiv)
+        })
+    })
+}
+
+    
+
+function saveNewTerm(){
+
+    const newTermForm = document.querySelector('#glossaryList')
+    const invalidEntryDiv = document.createElement('P')
+    invalidEntryDiv.innerText = 'Por favor, rellene todos los campos.'
+
+    
+    const glossaryWords = document.querySelector('#glossaryWords')
+    const termTitle = document.querySelector('#termTitle').value.trim()
+    const termDefinition = document.querySelector('#termDefinition').value.trim()
+    
+    //console.log(termTitle, termDefinition)
+    
+    //Glossary element:
+    const glossElem = document.createElement('LI')
+
+    //Comprobe and sanitize entries:
+    if(termTitle !== "" && termDefinition !== ""){
+        
+        glossary[`${termTitle}`] = termDefinition
+
+        glossElem.innerHTML = `<h4>${termTitle}</h4>
+                               <p>${termDefinition}</p>`
+
+        glossaryWords.appendChild(glossElem)
+
+        termTitle.value = ""
+        termDefinition.value = ""
+        console.log(glossary)
+        }else{
+            newTermForm.appendChild(invalidEntryDiv)
+            setTimeout(()=>{
+            invalidEntryDiv.remove()
+            },2000)
+        }
+
+    readTheDoc();
+}
+
+</script>
